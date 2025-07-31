@@ -1,0 +1,3 @@
+#!/bin/sh
+
+. ~/.config/shrc.d/zoxide_hook.sh

@@ -1,0 +1,101 @@
+#!/bin/sh
+
+# wPrntScrn: POSIX screenshot tool for Hyprland
+# Dependencies: grim, slurp, hyprctl, wl-copy, jq, notify-send
+
+# Set default screenshot directory
+SAVEDIR="${HOME}/Pictures/Screenshots"
+[ -f "${HOME}/.config/user-dirs.dirs" ] && . "${HOME}/.config/user-dirs.dirs" 2>/dev/null && SAVEDIR="${XDG_SCREENSHOTS_DIR:-${XDG_PICTURES_DIR:-${HOME}/Pictures}/Screenshots}"
+
+NOTIFY=yes CURSOR= WAIT=0 ACTION= SUBJECT= FILE= GEOM= OUTPUT= WHAT="Screenshot"
+
+die() { notify-send -t 3000 -a wPrntScrn -u critical "Screenshot" "${1:-Error}"; exit 2; }
+notify() { notify-send -t 3000 -a wPrntScrn "${2:-Screenshot}" "${1:-OK}" ${3:+-i "$3"}; }
+
+parse_args() {
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -n|--notify) NOTIFY=yes; shift ;;
+            -c|--cursor) CURSOR=-c; shift ;;
+            -w|--wait) shift; [ $# -eq 0 ] && die "--wait requires a number"; case "$1" in *[!0-9]*) die "Invalid wait: $1" ;; *) WAIT="$1"; shift ;; esac ;;
+            -h|--help) ACTION=usage; shift ;;
+            copy|save|savecopy) [ -z "$ACTION" ] && ACTION="$1"; shift ;;
+            active|screen|output|area|window|anything) [ -z "$SUBJECT" ] && SUBJECT="$1"; shift ;;
+            *) FILE="$1"; shift ;;
+        esac
+    done
+    FILE="${FILE:-${SAVEDIR}/$(date +%Y%m%d%H%M%S%N).png}"
+}
+
+check_tools() {
+    for cmd in grim slurp hyprctl wl-copy jq notify-send; do
+        command -v "$cmd" >/dev/null && echo "$cmd: OK" || { echo "$cmd: NOT FOUND"; exit 1; }
+    done
+    exit 0
+}
+
+print_usage() {
+    cat <<EOF
+Usage: wPrntScrn [-h|--help] [-n|--notify] [-c|--cursor] [-w|--wait N] (copy|save|savecopy) [active|screen|output|area|window|anything] [FILE]
+
+Actions:
+  copy      Copy screenshot to clipboard
+  save      Save screenshot to file
+  savecopy  Save and copy to clipboard
+
+Subjects:
+  active    Active window
+  screen    All visible outputs
+  output    Focused monitor
+  area      Manual rectangle
+  window    Manual window
+  anything  Manual area/window/output
+EOF
+    exit 0
+}
+
+take_screenshot() { grim $CURSOR ${3:+-o "$3"} ${2:+-g "$2"} "$1" || die "Failed to take screenshot"; }
+
+select_geometry() {
+    case "$SUBJECT" in
+        area) GEOM=$(slurp -d 2>/dev/null) || exit 1; WHAT="Area" ;;
+        active) FOCUSED=$(hyprctl -j activewindow 2>/dev/null) || die "Failed to get active window"; GEOM=$(echo "$FOCUSED" | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"'); WHAT="$(echo "$FOCUSED" | jq -r '.title') window" ;;
+        screen) GEOM=; WHAT="Screen" ;;
+        output) OUTPUT=$(hyprctl -j monitors | jq -r '.[] | select(.focused) | .name') || die "Failed to get output"; WHAT="$OUTPUT" ;;
+        window) GEOM=$(hyprctl -j clients | jq -r '.[] | select(.workspace.id | contains('$(hyprctl -j monitors | jq -r 'map(.activeWorkspace.id) | join(",")')')) | "\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | slurp -r 2>/dev/null) || exit 1; WHAT="Window" ;;
+        anything) GEOM=$(hyprctl -j clients | jq -r '.[] | select(.workspace.id | contains('$(hyprctl -j monitors | jq -r 'map(.activeWorkspace.id) | join(",")')')) | "\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | slurp -o 2>/dev/null) || exit 1; WHAT="Selection" ;;
+        *) die "Unknown subject: $SUBJECT" ;;
+    esac
+}
+
+handle_action() {
+    [ -z "$ACTION" ] && ACTION=usage
+    case "$ACTION" in
+        check) check_tools ;;
+        usage) print_usage ;;
+        copy)
+            TMPFILE=$(mktemp /tmp/wPrntScrn.XXXXXX) || die "Failed to create temp file"
+            [ -z "$SUBJECT" ] && SUBJECT=screen
+            select_geometry
+            take_screenshot "$TMPFILE" "$GEOM" "$OUTPUT"
+            wl-copy --type image/png <"$TMPFILE" || { rm -f "$TMPFILE"; die "Clipboard error"; }
+            notify "$WHAT copied to clipboard" "Screenshot" "$TMPFILE"
+            rm -f "$TMPFILE"
+            ;;
+        save|savecopy)
+            [ -z "$SUBJECT" ] && SUBJECT=screen
+            select_geometry
+            [ -d "$SAVEDIR" ] || mkdir -p "$SAVEDIR" 2>/dev/null || die "Cannot create $SAVEDIR"
+            take_screenshot "$FILE" "$GEOM" "$OUTPUT"
+            notify "$(basename "$FILE") saved" "Screenshot of $SUBJECT" "$FILE"
+            [ "$ACTION" = "savecopy" ] && wl-copy --type image/png <"$FILE" || die "Clipboard error"
+            [ "$ACTION" = "savecopy" ] && notify "$(basename "$FILE") saved and copied" "Screenshot of $SUBJECT" "$FILE"
+            echo "$FILE"
+            ;;
+        *) die "Unknown action: $ACTION" ;;
+    esac
+}
+
+parse_args "$@"
+[ $WAIT -gt 0 ] && sleep "$WAIT"
+handle_action
