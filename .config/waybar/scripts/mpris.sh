@@ -1,4 +1,8 @@
 #!/bin/sh
+# Reads /tmp every second
+# Writes to /tmp everytime the song changes
+# Make sure your /tmp is NOT on your storage
+# IT WILL WRECK IT
 
 STATE_FILE="${TMP:-/tmp}/mpris-scroll.state"
 MAXLEN=20
