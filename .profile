@@ -9,7 +9,6 @@ export PATH="$PATH:$HOME/.local/bin:$HOME/Applications:$HOME/.local/share/flatpa
 
 # User prefferences:
 export MINPS1="1" # Whether to show your "$HOSTNAME" in your "$PS1", this var is used by .shrc
-export LOCATION="Santiago_del_Estero" # The location used by WTTR, this var is referenced by .shrc
 export COOLHOME="]" # The indicator used with hpwd to indicate that the dir you in "$HOME"
 export COOLHOME_DEPTH="$COOLHOME~" # The indicator used with hpwd to indicate that the dir you are in is at "$HOME" or a subdirectory of "$HOME"
 export COOLSPINNER="|/-\\" # For a BSD styled spinner animation in scripst that use /etc/skel/.local/bin/.std.h.sh
