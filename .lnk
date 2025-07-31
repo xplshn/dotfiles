@@ -1,5 +1,6 @@
 .config/hypr/hyprland.conf
 .config/hypr/scripts/makoRofi.sh
+.config/shrc.d/zoxide_hook.sh
 .config/waybar/config.jsonc
 .config/waybar/scripts/mpris.awk
 .config/waybar/scripts/mpris.sh
