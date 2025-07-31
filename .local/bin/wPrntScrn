@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # wPrntScrn: POSIX screenshot tool for Hyprland
 # Dependencies: grim, slurp, hyprctl, wl-copy, jq, notify-send
@@ -88,8 +88,10 @@ handle_action() {
             [ -d "$SAVEDIR" ] || mkdir -p "$SAVEDIR" 2>/dev/null || die "Cannot create $SAVEDIR"
             take_screenshot "$FILE" "$GEOM" "$OUTPUT"
             notify "$(basename "$FILE") saved" "Screenshot of $SUBJECT" "$FILE"
-            [ "$ACTION" = "savecopy" ] && wl-copy --type image/png <"$FILE" || die "Clipboard error"
-            [ "$ACTION" = "savecopy" ] && notify "$(basename "$FILE") saved and copied" "Screenshot of $SUBJECT" "$FILE"
+            [ "$ACTION" = "savecopy" ] && {
+                wl-copy --type image/png <"$FILE" || die "Clipboard error"
+                notify "$(basename "$FILE") saved and copied" "Screenshot of $SUBJECT" "$FILE"
+            }
             echo "$FILE"
             ;;
         *) die "Unknown action: $ACTION" ;;
