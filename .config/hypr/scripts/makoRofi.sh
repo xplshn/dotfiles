@@ -1,12 +1,5 @@
 #!/bin/sh
 
-##
-# Maps an application name to a Nerd Font glyph.
-# Customize the icons for your applications here.
-#
-# @param $1 - The application name string.
-# @return   - The corresponding Nerd Font glyph.
-##
 getIconForApp() {
     local appNameLower
     appNameLower=$(command printf "%s" "$1" | command tr '[:upper:]' '[:lower:]')
@@ -30,12 +23,6 @@ getIconForApp() {
     esac
 }
 
-##
-# Reads notification data and generates lists for rofi's active/urgent rows.
-# Mako urgencies: 'low', 'normal', 'critical'. We'll treat 'low'/'normal' as active.
-#
-# @param $1 - The tab-separated notification data.
-##
 generateRofiLists() {
     local notificationData="$1"
     local count=0
@@ -52,12 +39,6 @@ generateRofiLists() {
     done
 }
 
-##
-# Processes tab-separated data into a single string formatted for rofi.
-#
-# @param $1 - The tab-separated notification data.
-# @return   - A formatted string with entries separated by '\x0f'.
-##
 processLogEntries() {
     local notificationData="$1"
     
@@ -74,24 +55,17 @@ processLogEntries() {
     done
 }
 
-##
-# Handles the user's action on a selected notification.
-# Prompts the user via rofi to confirm dismissal.
-#
-# @param $1 - The notification string selected from rofi.
-##
 handleSelectedNotification() {
     local selectedEntry="$1"
     local notificationId
 
-    # Extract the hidden ID from the Pango markup comment
     notificationId=$(command printf "%s" "$selectedEntry" | command sed -n 's/.*<!-- \([0-9]\{1,\}\) -->.*/\1/p')
 
     if [ -z "$notificationId" ]; then
         return 1 # Exit if ID extraction fails
     fi
 
-    # Use rofi to create a confirmation dialog
+    # TODO: Should handle other actions. I don't know how other actions work tho :sob:
     local choice
     choice=$(command printf "Cancel\nDismiss" | command rofi -dmenu -i -p "Action for ID ${notificationId}:" -lines 2 -no-custom)
 
@@ -105,12 +79,9 @@ handleSelectedNotification() {
     esac
 }
 
-##
-# Main execution function.
-##
 main() {
     # Default mode is to list active notifications.
-    # Accepts 'history' as an argument to view historical notifications.
+    # Accepts 'history' as an argument to view older notifications.
     local mode="list"
     if [ "$1" = "history" ]; then
         mode="history"
@@ -143,8 +114,6 @@ main() {
         END { print_record() } # Print the very last record
     ')
 
-    # Filter out our own "no notifications" message, in case it was historized.
-    # Use -F for fixed string matching, which is safer and faster.
     notificationData=$(command printf "%s\n" "$notificationData" | command grep -vF "$ERR_NO_NOTIFICATIONS")
 
     # Exit if there are no notifications
@@ -171,5 +140,4 @@ main() {
     fi
 }
 
-# Run the script with all arguments passed from the command line
 main "$@"
