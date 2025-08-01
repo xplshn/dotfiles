@@ -25,6 +25,7 @@ customCenteredColor=""
 minimizeWindows=""
 swaylockOptions=""
 paramOptions=""
+notifyPid=""
 
 # Help
 #
@@ -88,6 +89,7 @@ fi
 #
 #
 outputs=$(hyprctl -j monitors | jq -r '.[] | .name')
+isFirstMonitor=true
 
 # Process each monitor
 for output in $outputs; do
@@ -97,6 +99,13 @@ for output in $outputs; do
 
     # Take a screenshot of the specific output
     grim -o "$output" "$img"
+
+    if [ "$isFirstMonitor" = true ]; then
+        #notify-send -e -w -a "swaylock.sh" "Locking..." "See you in a while..." &
+        notify-send -e -t 1500 -a "swaylock.sh" "Locking..." "See you in a while..." &
+        #notifyPid=$!
+        isFirstMonitor=false
+    fi
 
     # Per-monitor theme and SVG setup
     #
@@ -193,6 +202,11 @@ paramOptions="$paramOptions --indicator-radius 85 --text-ver-color=00000000 \
 if [ -n "$minimizeWindows" ]; then
     "$minimizeWindows" -k on
 fi
+
+## Kill the notification
+#if [ -n "$notifyPid" ]; then
+#  kill $notifyPid
+#fi
 
 # Try to run swaylock with the generated parameters.
 # Use 'eval' to correctly parse the command string with its arguments.
