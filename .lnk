@@ -1,3 +1,4 @@
+.config/foot/foot.ini
 .config/hypr/hyprland.conf
 .config/hypr/scripts/makoRofi.sh
 .config/shrc.d/zoxide_hook.sh
