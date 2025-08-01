@@ -1,6 +1,7 @@
 .config/foot/foot.ini
 .config/hypr/hyprland.conf
 .config/hypr/scripts/makoRofi.sh
+.config/hypr/scripts/rofiPa.sh
 .config/rc/runlevels/gui/pipewire
 .config/shrc.d/zoxide_hook.sh
 .config/waybar/config.jsonc
