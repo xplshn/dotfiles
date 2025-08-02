@@ -4,7 +4,7 @@
 # Make sure your /tmp is NOT on your storage
 # IT WILL WRECK IT
 
-function getcmd(cmd,    line, ret) {
+function getCmd(cmd,    line, ret) {
     ret = ""
     if ((cmd | getline line) > 0) {
         ret = line
@@ -14,22 +14,24 @@ function getcmd(cmd,    line, ret) {
 }
 
 BEGIN {
+    scrollWhilePaused = 0
+
     if (ENVIRON["TMPDIR"] != "") {
-        TMPDIR = ENVIRON["TMPDIR"]
+        tmpDir = ENVIRON["TMPDIR"]
     } else {
-        TMPDIR = "/tmp"
+        tmpDir = "/tmp"
     }
 
-    STATE_FILE = TMPDIR "/mpris-scroll.state"
-    MAXLEN = 20
-    SCROLL_DELAY = 1
-    TEXT_WIDTH = MAXLEN - 2
+    stateFile = tmpDir "/mpris-scroll.state"
+    maxLen = 20
+    scrollDelay = 1
+    textWidth = maxLen - 2
 
-    status = getcmd("playerctl status 2>/dev/null")
+    status = getCmd("playerctl status 2>/dev/null")
     if (status == "") status = "Stopped"
 
-    artist = getcmd("playerctl metadata xesam:artist 2>/dev/null")
-    title = getcmd("playerctl metadata xesam:title 2>/dev/null")
+    artist = getCmd("playerctl metadata xesam:artist 2>/dev/null")
+    title = getCmd("playerctl metadata xesam:title 2>/dev/null")
 
     player = ""
     while ((getline line < "playerctl -l 2>/dev/null") > 0) {
@@ -45,58 +47,60 @@ BEGIN {
     else if (index(player, "telegram") > 0) icon = ""
     else if (index(player, "youtube") > 0) icon = "󰗃"
 
-    paused_icon = ""
+    pausedIcon = ""
 
     track = artist " - " title
-    if (track == " - " || track == "") {
-        exit
-    }
+    if (track == " - " || track == "") exit
 
-    cached_track = ""
-    start_epoch = 0
-    if ((getline line < STATE_FILE) > 0) {
-        cached_track = line
-        close(STATE_FILE)
-        if ((getline line < STATE_FILE) > 0) {
-            start_epoch = line + 0
-            close(STATE_FILE)
+    cachedTrack = ""
+    startEpoch = 0
+    if ((getline line < stateFile) > 0) {
+        cachedTrack = line
+        close(stateFile)
+        if ((getline line < stateFile) > 0) {
+            startEpoch = line + 0
+            close(stateFile)
         }
     }
 
-    if (track != cached_track) {
+    if (track != cachedTrack) {
         "date +%s" | getline now
         close("date +%s")
-        start_epoch = now + 0
-        cmd = "printf \"%s\\n%s\\n\" \"" track "\" \"" start_epoch "\" > \"" STATE_FILE "\""
+        startEpoch = now + 0
+        cmd = "printf \"%s\\n%s\\n\" \"" track "\" \"" startEpoch "\" > \"" stateFile "\""
         system(cmd)
     }
 
-    track_len = length(track)
+    trackLen = length(track)
 
-    if (track_len <= TEXT_WIDTH) {
-        printf "%s %-" TEXT_WIDTH "s\n", icon, track
+    if (trackLen <= textWidth) {
+        printf "%s %-" textWidth "s\n", icon, track
         exit
     }
 
-    "date +%s" | getline now
-    close("date +%s")
+    if (status == "Paused" && scrollWhilePaused == 0) {
+        now = startEpoch
+    } else {
+        "date +%s" | getline now
+        close("date +%s")
+    }
 
-    elapsed = now - start_epoch
-    shift = int(elapsed / SCROLL_DELAY)
-    shift = shift % (track_len + 3)
+    elapsed = now - startEpoch
+    shift = int(elapsed / scrollDelay)
+    shift = shift % (trackLen + 3)
 
-    scroll_text = track " ~ " track
+    scrollText = track " ~ " track
 
     start = shift + 1
-    if (start > length(scroll_text)) start = 1
+    if (start > length(scrollText)) start = 1
 
-    out = substr(scroll_text, start, TEXT_WIDTH)
-    while (length(out) < TEXT_WIDTH) {
+    out = substr(scrollText, start, textWidth)
+    while (length(out) < textWidth) {
         out = out " "
     }
 
     if (status == "Paused") {
-        printf "%s <i>%s</i>\n", paused_icon, out
+        printf "%s <i>%s</i>\n", pausedIcon, out
     } else {
         printf "%s %s\n", icon, out
     }
