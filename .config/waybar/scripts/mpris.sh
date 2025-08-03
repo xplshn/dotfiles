@@ -5,76 +5,114 @@
 # IT WILL WRECK IT
 
 scrollWhilePaused=0
-stateFile="${TMP:-/tmp}/mpris-scroll.state"
 maxLen=20
 scrollDelay=1
+textWidth=$((maxLen - 2))
+pausedIcon=""
+stateFile="${TMP:-/tmp}/mpris-scroll.state"
+tagsAndIcons='[YouTube]:󰗃 [Discord]: [Telegram]:'
 
-status=$(playerctl status 2>/dev/null || echo "Stopped")
+trim() {
+	# Remove leading
+	set -- "${1#"${1%%[![:space:]]*}"}"
+	# Remove trailing
+	printf %s "${1%"${1##*[![:space:]]}"}"
+}
+
+stripTag() {
+	for entry in $tagsAndIcons; do
+		tag=${entry%%:*}
+		case "$1" in
+			*"$tag") printf %s "${1%"$tag"}"; return ;;
+		esac
+	done
+	printf %s "$1"
+}
+
+iconForTitle() {
+	title=$1 player=$2
+	for entry in $tagsAndIcons; do
+		tag=${entry%%:*}
+		icon=${entry#*:}
+		case "$title" in
+			*"$tag"*) echo "$icon"; return ;;
+		esac
+	done
+
+	case "$player" in
+		*mpv*) echo "" ;;
+		*brave*|*chromium*) echo "" ;;
+		*telegram*) echo "" ;;
+		*) echo "" ;;
+	esac
+}
+
+status=$(playerctl status 2>/dev/null)
+[ -z "$status" ] && status="Stopped"
+
 artist=$(playerctl metadata xesam:artist 2>/dev/null)
 title=$(playerctl metadata xesam:title 2>/dev/null)
-player=$(playerctl -l 2>/dev/null | head -n1)
+player=$(playerctl -l 2>/dev/null | sed -n 1p)
 
-case "$player" in
-  *mpv*) icon="" ;;
-  *brave*) icon="" ;;
-  *chromium*) icon="" ;;
-  *discord*) icon="" ;;
-  *telegram*) icon="" ;;
-  *youtube*) icon="󰗃" ;;
-  *) icon="" ;;
-esac
-
-pausedIcon=""
-track="${artist} - ${title}"
+icon=$(iconForTitle "$title" "$player")
+title=$(trim "$(stripTag "$(trim "$title")")")
+track="$artist - $title"
 [ -z "$track" ] || [ "$track" = " - " ] && exit 0
 
 if [ -f "$stateFile" ]; then
-    cachedTrack=$(sed -n '1p' "$stateFile")
-    startEpoch=$(sed -n '2p' "$stateFile")
-else
-    cachedTrack=""
-    startEpoch=0
+	i=0
+	while IFS= read -r line && [ $i -lt 2 ]; do
+		case $i in
+			0) cachedTrack=$line ;;
+			1) startEpoch=$line ;;
+		esac
+		i=$((i + 1))
+	done < "$stateFile"
 fi
 
 if [ "$track" != "$cachedTrack" ]; then
-    now=$(date +%s)
-    printf "%s\n%s\n" "$track" "$now" > "$stateFile"
-    startEpoch=$now
+	startEpoch=$(date +%s)
+	printf "%s\n%s\n%s\n" "$track" "$startEpoch" "$icon" > "$stateFile"
 fi
 
-textWidth=$((maxLen - 2))
-trackLen=$(printf "%s" "$track" | awk '{ print length }')
-
+trackLen=${#track}
 if [ "$trackLen" -le "$textWidth" ]; then
-    printf "%s %-${textWidth}s\n" "$icon" "$track"
-    exit 0
+	printf "%s %-${textWidth}s\n" "$icon" "$track"
+	exit 0
 fi
 
 if [ "$status" = "Paused" ] && [ "$scrollWhilePaused" -eq 0 ]; then
-    now=$startEpoch
+	now=$startEpoch
 else
-    now=$(date +%s)
+	now=$(date +%s)
 fi
 
 elapsed=$((now - startEpoch))
-shift=$((elapsed / scrollDelay))
-shift=$((shift % (trackLen + 3)))
-
+shiftBy=$((elapsed / scrollDelay))
+shiftBy=$((shiftBy % (trackLen + 3)))
 scrollText="$track ~ $track"
+scrollLen=${#scrollText}
 
-textOut=$(printf "%s\n" "$scrollText" |
-    awk -v start="$shift" -v width="$textWidth" '
-        {
-            s = $0
-            start = start + 1
-            if (start > length(s)) start = 1
-            out = substr(s, start, width)
-            while (length(out) < width) out = out " "
-            print out
-        }')
+[ "$shiftBy" -ge "$scrollLen" ] && shiftBy=0
+
+# Build substring
+i=0 idx=0 textOut= ch=
+while [ "$i" -lt "$scrollLen" ]; do
+	ch=${scrollText%"${scrollText#?}"}
+	[ "$idx" -ge "$shiftBy" ] && [ "${#textOut}" -lt "$textWidth" ] && textOut="$textOut$ch"
+	scrollText=${scrollText#?}
+	i=$((i + 1))
+	idx=$((idx + 1))
+	[ "${#textOut}" -ge "$textWidth" ] && break
+done
+
+# Pad if needed
+while [ "${#textOut}" -lt "$textWidth" ]; do
+	textOut="$textOut "
+done
 
 if [ "$status" = "Paused" ]; then
-    printf "%s <i>%s</i>\n" "$pausedIcon" "$textOut"
+	printf "%s <i>%s</i>\n" "$pausedIcon" "$textOut"
 else
-    printf "%s %s\n" "$icon" "$textOut"
+	printf "%s %s\n" "$icon" "$textOut"
 fi

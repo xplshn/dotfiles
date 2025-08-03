@@ -4,75 +4,89 @@
 # Make sure your /tmp is NOT on your storage
 # IT WILL WRECK IT
 
-function getCmd(cmd,    line, ret) {
-    ret = ""
-    if ((cmd | getline line) > 0) {
-        ret = line
-    }
+function getCmd(cmd,    line, out) {
+    out = ""
+    if ((cmd | getline line) > 0) out = line
     close(cmd)
-    return ret
+    return out
+}
+
+function trim(str) {
+    sub(/^[ \t\r\n]+/, "", str)
+    sub(/[ \t\r\n]+$/, "", str)
+    return str
+}
+
+function stripTag(str,    i, tag, tagsLen) {
+    tagsLen = split(tagsAndIcons, tags, " ")
+    for (i = 1; i <= tagsLen; ++i) {
+        split(tags[i], pair, ":")
+        tag = pair[1]
+        if (match(str, tag "$")) {
+            return substr(str, 1, RLENGTH - length(tag))
+        }
+    }
+    return str
+}
+
+function iconForTitle(title, player,    i, tag, ico, tagsLen) {
+    tagsLen = split(tagsAndIcons, tags, " ")
+    for (i = 1; i <= tagsLen; ++i) {
+        split(tags[i], pair, ":")
+        tag = pair[1]
+        ico = pair[2]
+        if (index(title, tag) > 0) return ico
+    }
+
+    if (index(player, "mpv")) return ""
+    if (index(player, "brave") || index(player, "chromium")) return ""
+    if (index(player, "telegram")) return ""
+    return ""
 }
 
 BEGIN {
     scrollWhilePaused = 0
-
-    if (ENVIRON["TMPDIR"] != "") {
-        tmpDir = ENVIRON["TMPDIR"]
-    } else {
-        tmpDir = "/tmp"
-    }
-
-    stateFile = tmpDir "/mpris-scroll.state"
+    stateFile = (ENVIRON["TMP"] ? ENVIRON["TMP"] : "/tmp") "/mpris-scroll.state"
     maxLen = 20
     scrollDelay = 1
     textWidth = maxLen - 2
+    pausedIcon = ""
+
+    tagsAndIcons = "[YouTube]:󰗃 [Discord]: [Telegram]:"
 
     status = getCmd("playerctl status 2>/dev/null")
     if (status == "") status = "Stopped"
 
     artist = getCmd("playerctl metadata xesam:artist 2>/dev/null")
     title = getCmd("playerctl metadata xesam:title 2>/dev/null")
+    title = trim(stripTag(trim(title)))
 
-    player = ""
-    while ((getline line < "playerctl -l 2>/dev/null") > 0) {
-        if (player == "") player = line
-    }
-    close("playerctl -l 2>/dev/null")
+    player = getCmd("playerctl -l 2>/dev/null | head -n1")
 
-    icon = ""
-    if (index(player, "mpv") > 0) icon = ""
-    else if (index(player, "brave") > 0) icon = ""
-    else if (index(player, "chromium") > 0) icon = ""
-    else if (index(player, "discord") > 0) icon = ""
-    else if (index(player, "telegram") > 0) icon = ""
-    else if (index(player, "youtube") > 0) icon = "󰗃"
-
-    pausedIcon = ""
+    icon = iconForTitle(title, player)
 
     track = artist " - " title
-    if (track == " - " || track == "") exit
+    if (track == "" || track == " - ") exit
 
     cachedTrack = ""
     startEpoch = 0
+
     if ((getline line < stateFile) > 0) {
         cachedTrack = line
-        close(stateFile)
         if ((getline line < stateFile) > 0) {
             startEpoch = line + 0
-            close(stateFile)
         }
+        close(stateFile)
     }
 
     if (track != cachedTrack) {
-        "date +%s" | getline now
-        close("date +%s")
+        now = getCmd("date +%s")
         startEpoch = now + 0
-        cmd = "printf \"%s\\n%s\\n\" \"" track "\" \"" startEpoch "\" > \"" stateFile "\""
+        cmd = "printf \"%s\\n%s\\n%s\\n\" \"" track "\" \"" startEpoch "\" \"" icon "\" > \"" stateFile "\""
         system(cmd)
     }
 
     trackLen = length(track)
-
     if (trackLen <= textWidth) {
         printf "%s %-" textWidth "s\n", icon, track
         exit
@@ -81,23 +95,20 @@ BEGIN {
     if (status == "Paused" && scrollWhilePaused == 0) {
         now = startEpoch
     } else {
-        "date +%s" | getline now
-        close("date +%s")
+        now = getCmd("date +%s") + 0
     }
 
     elapsed = now - startEpoch
     shift = int(elapsed / scrollDelay)
-    shift = shift % (trackLen + 3)
+    shift %= (trackLen + 3)
 
     scrollText = track " ~ " track
+    scrollLen = length(scrollText)
 
-    start = shift + 1
-    if (start > length(scrollText)) start = 1
+    if (shift >= scrollLen) shift = 0
 
-    out = substr(scrollText, start, textWidth)
-    while (length(out) < textWidth) {
-        out = out " "
-    }
+    out = substr(scrollText, shift + 1, textWidth)
+    while (length(out) < textWidth) out = out " "
 
     if (status == "Paused") {
         printf "%s <i>%s</i>\n", pausedIcon, out

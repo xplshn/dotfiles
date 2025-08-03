@@ -47,7 +47,7 @@
   //  "max-length": 20
   //},
   "custom/mpris": {
-    "exec": "~/.config/waybar/scripts/mpris.awk",
+    "exec": "~/.config/waybar/scripts/mpris.sh",
     "interval": 1,
     "max-length": 20,
     "on-click": "playerctl play-pause",
