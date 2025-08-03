@@ -4,13 +4,16 @@
 # Make sure your /tmp is NOT on your storage
 # IT WILL WRECK IT
 
+TMPDIR="${TMPDIR:-/tmp}"
 scrollWhilePaused=0
 maxLen=20
 scrollDelay=1
 textWidth=$((maxLen - 2))
 pausedIcon=""
-stateFile="${TMP:-/tmp}/mpris-scroll.state"
+stateFile="$TMPDIR/mpris-scroll.state"
 tagsAndIcons='[YouTube]:󰗃 [Discord]: [Telegram]:'
+
+[ -f "$TMPDIR/no-mpris" ] && exit 0
 
 trim() {
 	# Remove leading
