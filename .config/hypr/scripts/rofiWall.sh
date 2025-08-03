@@ -33,6 +33,7 @@ get_mtime() {
         # TODO: emit error here
         # add log function, receives color and message
         # add log_error function, receives messages, calls log function passing red color and exits 1
+        false
     fi
 }
 
