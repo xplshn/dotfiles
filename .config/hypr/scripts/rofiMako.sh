@@ -87,7 +87,7 @@ main() {
         mode="history"
     fi
 
-    local ERR_NO_NOTIFICATIONS="makoRofi: no notifications"
+    local ERR_NO_NOTIFICATIONS="rofiMako: no notifications"
 
     # Use awk to parse the plain text output of `makoctl list` or `makoctl history`
     # into a consistent, tab-separated format: ID\tAppName\tSummary\tBody\tUrgency
