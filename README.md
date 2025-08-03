@@ -46,11 +46,11 @@
 | Print                        | Copy full screen         |
 | SHIFT + Print                | Copy area                |
 | CTRL + Print                 | Copy active window       |
-| CTRL + SHIFT + Print         | Copy focused window      |
+| CTRL + SHIFT + Print         | Copy picked window       |
 | SUPER + Print                | Save full screen         |
 | SUPER + SHIFT + Print        | Save area                |
 | SUPER + CTRL + Print         | Save active window       |
-| SUPER + CTRL + SHIFT + Print | Save focused window     |
+| SUPER + CTRL + SHIFT + Print | Save picked window       |
 
 ---
 
