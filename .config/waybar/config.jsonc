@@ -8,7 +8,6 @@
   "passthrough": false,
   "fixed-center": true,
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
-//  "modules-center": ["mpris"],
   "modules-center": ["custom/mpris"],
   "modules-right": [
     "cpu",
@@ -17,6 +16,8 @@
     "custom/sep",
     "wireplumber",
     "wireplumber#source",
+    "custom/sep",
+    "battery",
     "custom/sep",
     "clock",
     "custom/sep",
@@ -28,31 +29,13 @@
     "custom/sep",
     "custom/power"
   ],
-  //"mpris": {
-  //  "dynamic-order": ["artist", "title"],
-  //  "format": "{player_icon} {dynamic}",
-  //  "format-paused": "{status_icon} <i>{dynamic}</i>",
-  //  "status-icons": {
-  //    "paused": ""
-  //  },
-  //  "player-icons": {
-  //    "default": "",
-  //    "mpv": "",
-  //    "chromium": "",
-  //    "brave": "",
-  //    "discord": "",
-  //    "telegram": "",
-  //    "youtube": "󰗃",
-  //  },
-  //  "max-length": 20
-  //},
   "custom/mpris": {
     "exec": "~/.config/waybar/scripts/mpris.sh",
     "interval": 1,
     "max-length": 20,
     "on-click": "playerctl play-pause",
     "on-click-right": "playerctl next",
-    "on-click-middle": "playerctl previous",
+    "on-click-middle": "playerctl previous"
   },
   "hyprland/workspaces": {
     "on-click": "activate",
@@ -121,6 +104,18 @@
     "tooltip-format": "Microphone // {volume}%",
     "scroll-step": 5
   },
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "tooltip": true,
+    "interval": 5
+  },
   "custom/sep": {
     "format": "|",
     "tooltip": false
@@ -139,9 +134,9 @@
       "notification": "󰡟"
     },
     "return-type": "text",
-    "exec": "makoctl list | awk '/^Notification [0-9]+:/ && !/makoRofi/ {c++} END {if (c>0) print \"󰡟 \" c; else print \"󰅺 \" c}'",
-    "on-click": "~/.config/hypr/scripts/makoRofi.sh",
-    "on-click-right": "~/.config/hypr/scripts/makoRofi.sh history",
+    "exec": "makoctl list | awk '/^Notification [0-9]+:/ && !/rofiMako/ {c++} END {if (c>0) print \"󰡟 \" c; else print \"󰅺 \" c}'",
+    "on-click": "~/.config/hypr/scripts/rofiMako.sh",
+    "on-click-right": "~/.config/hypr/scripts/rofiMako.sh history",
     "interval": 1,
     "escape": true
   }

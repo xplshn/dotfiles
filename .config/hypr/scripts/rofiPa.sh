@@ -1,5 +1,5 @@
 #!/bin/sh -e
-chosen=$(pa l | rofi -dmenu -i -p "Select Key")
+chosen=$(pa l | wofi -dmenu -i -p "Select Key")
 if [ -z "$chosen" ]; then
     exit 0
 fi

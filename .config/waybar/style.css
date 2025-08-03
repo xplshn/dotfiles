@@ -1,184 +1,287 @@
+@define-color accent_color #20D0FC;
+
 * {
-    font-family: "JetBrains Mono Nerd Font";
+    font-family: "Segoe UI", "JetBrains Mono Nerd Font";
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 6px;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
 }
 
 window#waybar {
-    background: #0F0F17;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.5), rgba(0,0,0,0.6));
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255,255,255,0.4);
 }
 
 tooltip {
-    background: #171717;
-    color: #A1BDCE;
-    border-radius: 7px;
-    border: 2px solid #101a24;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(0,0,0,0.2), rgba(0,0,0,0.3));
+    color: #F0F8FF;
+    border-radius: 6px;
+    border-style: solid;
+    border-width: 1px;
+    border-top-color: rgba(255,255,255,0.4);
+    border-bottom-color: rgba(255,255,255,0.25);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+tooltip label {
+    color: #F0F8FF;
 }
 
 #workspaces {
-    background: rgba(23, 23, 23, 0.0);
-    color: #888789;
-    box-shadow: none;
-    text-shadow: none;
-    border-radius: 9px;
-    transition: 0.2s ease;
-    padding-left: 2px;
-    padding-right: 2px;
-    padding-top: 1px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #F0F8FF;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #workspaces button {
-    background: rgba(23, 23, 23, 0.0);
-    color: #A1BDCE;
-    box-shadow: none;
-    text-shadow: none;
-    border-radius: 9px;
-    transition: 0.2s ease;
-    padding-left: 3px;
-    padding-right: 3px;
+    background: transparent;
+    color: #F0F8FF;
+    margin: 0 3px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition-duration: 120ms;
+    text-shadow: 0 0 4px rgba(135,135,135,0.5);
 }
 
 #workspaces button.active {
-    color: #A1BDCE;
-    transition: all 0.3s ease;
-    padding-left: 3px;
-    padding-right: 3px;
+    background-image: linear-gradient(to bottom, rgba(32,208,252,0.6), rgba(0,100,100,0.1));
+    color: @accent_color;
+    text-shadow: 0 0 6px @accent_color;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
 }
 
 #workspaces button:hover {
-    background: none;
-    color: #72D792;
-    transition: all 0.5s cubic-bezier(.55,-0.68,.48,1.682);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(0,0,0,0.4));
+    color: @accent_color;
+    text-shadow: 0 0 8px @accent_color;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.3);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #window {
-    color: #A1BDCE;
-    font-size: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    color: #F0F8FF;
+    font-size: 12px;
+    padding: 3px 6px;
+    background: transparent;
 }
 
 #mpris, #custom-mpris {
-    color: #E8EDF0;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #F0F8FF;
     font-weight: bold;
-    background: rgba(23, 23, 23, 0.0);
-    padding-left: 5px;
-    padding-right: 5px;
-    animation: glow 3s linear infinite alternate;
-/*  animation: blink 3s linear infinite alternate; */
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
+    animation: aero-glow 2.5s ease-in-out infinite alternate;
 }
 
-@keyframes glow {
-	0% {
-		text-shadow: 0 0 5px #fffF00, 0 0 5px #ff0000, 0 0 15px #ff6200, 0 0 20px #ff0000;
-	}
-	50% {
-		text-shadow: 0 0 10px #fffF00, 0 0 10px #ff0000, 0 0 30px #ff6200, 0 0 40px #ff0000;
-	}
-	20% {
-		text-shadow: 0 0 10px #fffF00, 0 0 10px #ff0000, 0 0 30px #ff6200, 0 0 15px #ff0000;
-	}
-	100% {
-		text-shadow: 0 0 5px #fffF00, 0 0 5px #ff0000, 0 0 15px #ff6200, 0 0 20px #ff0000;
-	}
+@keyframes aero-glow {
+    0% {
+        text-shadow: 0 0 6px rgba(255,255,255,0.7), 0 0 12px @accent_color;
+        box-shadow: 0 0 12px rgba(32,208,252,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+    }
+    100% {
+        text-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 24px @accent_color;
+        box-shadow: 0 0 18px rgba(32,208,252,0.7), inset 0 1px 2px rgba(255,255,255,0.4);
+    }
 }
 
 #cpu {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #A1D4FF;
     font-weight: normal;
-    font-size: 14px;
-    color: #915CAF;
-    background: rgba(23, 23, 23, 0.0);
-    padding-left: 3px;
-    padding-right: 3px;
+    font-size: 12px;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #memory {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #FFE4B5;
     font-weight: normal;
-    font-size: 14px;
-    color: #E4C9AF;
-    background: rgba(23, 23, 23, 0.0);
-    padding-left: 3px;
-    padding-right: 3px;
+    font-size: 12px;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #wireplumber, #wireplumber-source, #battery, #backlight {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #7EC4FF;
     font-weight: normal;
-    font-size: 14px;
-    color: #6F8FDB;
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px 2px 0px 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+    font-size: 12px;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
-#clock {
-    color: #A1BDCE;
-    font-size: 12px;
-    font-weight: 900;
-    font-family: "JetBrains Mono Nerd Font";
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px 2px 0px 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+#battery.warning, #battery.critical {
+    color: #FCF520;
 }
 
-#clock-simpleclock {
-    color: #A1BDCE;
+#clock, #clock-simpleclock {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #F0F8FF;
     font-size: 12px;
-    font-weight: 900;
-    font-family: "JetBrains Mono Nerd Font";
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px 2px 0px 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+    font-weight: bold;
+    font-family: "Segoe UI", "JetBrains Mono Nerd Font";
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.15);
+    border-bottom-color: rgba(255,255,255,0.1);
+    border-width: 1px;
 }
 
 #tray {
-    color: #A1BDCE;
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px 2px 0px 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #F0F8FF;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
-#tray > .passive, #tray > .active {
-    margin: 0px 2px;
+#tray menu {
+    background-color: rgba(255,255,255,0.025);
+    color: #F0F8FF;
+    padding: 3px;
+}
+
+#tray menu menuitem {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+    color: #F0F8FF;
+    margin: 2px;
+    border-radius: 4px;
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.3);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
+}
+
+#tray menu menuitem:hover {
+    background-image: linear-gradient(to bottom, rgba(32,208,252,0.15), rgba(0,0,0,0.3), rgba(32,208,252,0.15));
+    color: @accent_color;
+    text-shadow: 0 0 6px @accent_color;
+    box-shadow: 0 0 4px rgba(0,0,0,0.4);
 }
 
 #custom-notifications {
-    font-family: "JetBrains Mono Nerd Font";
-    font-size: 13px;
-    color: #A1BDCE;
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px 2px 0px 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #F0F8FF;
+    font-family: "Segoe UI", "JetBrains Mono Nerd Font";
+    font-size: 12px;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #custom-media {
-    color: #E8EDF0;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
+    color: #F5FBFF;
     font-size: 12px;
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px 2px 0px 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #custom-power {
-    font-size: 13px;
+    background-image: linear-gradient(to bottom, rgba(32,208,252,0.6), rgba(0,100,100,0.1));
     color: #FFFFFF;
-    background: rgba(22, 19, 32, 0.9);
-    margin: 3px 2px 3px 2px;
-    padding-left: 4px;
-    padding-right: 4px;
+    font-size: 12px;
+    margin: 3px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.34);
+    border-style: none;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.45);
+    border-bottom-color: rgba(255,255,255,0.15);
+    border-width: 1px;
 }
 
 #custom-sep {
-    color: #A1BDCE;
+    color: #A1D4FF;
     font-size: 12px;
-    background: rgba(23, 23, 23, 0.0);
-    margin: 0px;
-    padding: 0px;
+    background: transparent;
+    margin: 0;
+    padding: 0;
 }
