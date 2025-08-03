@@ -2,6 +2,7 @@
 .config/hypr/hyprland.conf
 .config/hypr/scripts/makoRofi.sh
 .config/hypr/scripts/rofiPa.sh
+.config/hypr/scripts/rofiWall.sh
 .config/hypr/scripts/swayLock.sh
 .config/rc/runlevels/gui/pipewire
 .config/shrc.d/zoxide_hook.sh
