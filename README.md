@@ -1,9 +1,5 @@
 # Hyprland Keybindings
 
-<table>
-<tr>
-<td>
-
 ### Windows and Workspaces
 
 | Keybind               | Action                         |
@@ -24,9 +20,6 @@
 | SUPER + SHIFT + -     | Move to scratchpad             |
 | SUPER + scroll        | Cycle workspaces               |
 
-</td>
-<td>
-
 ### Shortcuts
 
 | Keybind                  | Action                        |
@@ -43,10 +36,6 @@
 | SUPER + B                | Brave Browser                 |
 | SHIFT/CTRL/Mod + Print   | Screenshot actions            |
 | XF86 Keys                | Volume / Brightness / Media   |
-
-</td>
-</tr>
-</table>
 
 ---
 
