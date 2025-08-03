@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# shell-based emoji picker
+#
+# deps:
+# - download: curl
+# - menu: one of rofi, bemenu, dmenu, wofi, tofi, fuzzel, fzf
+# - output (auto-detected): wtype, ydotool, xdotool, wl-copy, xclip
+
+set -e
+
+# --- Configuration ---
+emojidir="$HOME/.cache/shmoji"
+emojifile="$emojidir/emojis.txt"
+
+# --- Helper Functions ---
+die() {
+    printf "Error: %s\n" "$1" >&2
+    exit 1
+}
+
+depends() {
+    command -v "$1" >/dev/null || die "'$1' not found in PATH."
+}
+
+emojicheck() {
+    [ -f "$emojifile" ] || die "Emoji file not found. Run '$0 download' first."
+}
+
+# Extracts the emoji character from a line (e.g., "✅ check mark" -> "✅")
+extract_emoji() {
+    printf "%s" "$1" | cut -d' ' -f1
+}
+
+# Outputs the selected emoji using the best available method.
+output_emoji() {
+    emoji="$1"
+    # Exit silently if the selection was empty (e.g., user pressed Esc).
+    [ -z "$emoji" ] && exit 0
+
+    # Priority 1: Type the emoji directly.
+    if command -v wtype >/dev/null; then
+        wtype -s 0 "$emoji"
+    elif command -v ydotool >/dev/null; then
+        ydotool type "$emoji"
+    elif command -v xdotool >/dev/null && [ "$XDG_SESSION_TYPE" = "x11" ]; then
+        xdotool type --clearmodifiers "$emoji"
+    # Priority 2: Copy the emoji to the clipboard.
+    elif command -v wl-copy >/dev/null; then
+        printf "%s" "$emoji" | wl-copy
+        printf "Note: Copied '%s' to clipboard (wl-copy).\n" "$emoji" >&2
+    elif command -v xclip >/dev/null; then
+        printf "%s" "$emoji" | xclip -selection clipboard
+        printf "Note: Copied '%s' to clipboard (xclip).\n" "$emoji" >&2
+    # Fallback: Print to standard output.
+    else
+        printf "%s\n" "$emoji"
+        printf "Note: No typing or clipboard tool found. Printed to stdout.\n" >&2
+    fi
+}
+
+# --- Main Logic ---
+cmd="$1"
+if [ -z "$cmd" ]; then
+    printf "usage: %s [download | <menu>]\n" "$(basename "$0")"
+    printf "available menus: bemenu, dmenu, rofi, wofi, tofi, fuzzel, fzf\n"
+    exit 1
+fi
+
+if [ "$cmd" = "download" ]; then
+    depends curl
+    mkdir -p "$emojidir"
+    printf "Downloading emoji list...\n" >&2
+    curl -sfL 'https://trash.j3s.sh/emojis.txt' > "$emojifile"
+    printf "Downloaded %s emojis to %s\n" "$(wc -l < "$emojifile")" "$emojifile" >&2
+    exit 0
+fi
+
+emojicheck
+
+case "$cmd" in
+    rofi)   depends rofi;   menu_cmd="rofi -dmenu -i -p Emoji" ;;
+    bemenu) depends bemenu; menu_cmd="bemenu -i -p Emoji -l 20" ;;
+    dmenu)  depends dmenu;  menu_cmd="dmenu -i -p Emoji" ;;
+    wofi)   depends wofi;   menu_cmd="wofi --dmenu -i -p Emoji" ;;
+    tofi)   depends tofi;   menu_cmd="tofi --prompt-text 'Emoji: '" ;;
+    fuzzel) depends fuzzel; menu_cmd="fuzzel -d -p 'Emoji: '" ;;
+    fzf)    depends fzf;    menu_cmd="fzf" ;;
+    *)      die "Unknown command: '$cmd'. See usage." ;;
+esac
+
+# Execute the chosen menu, get selection, extract the emoji, and output it.
+selection=$(cat "$emojifile" | eval "$menu_cmd")
+emoji_char=$(extract_emoji "$selection")
+output_emoji "$emoji_char"
+
+exit 0

@@ -11,6 +11,7 @@
 .config/waybar/scripts/mpris.sh
 .config/waybar/style.css
 .config/wofi
+.local/bin/shmoji
 .local/bin/wPrntScrn
 .profile
 .shrc
