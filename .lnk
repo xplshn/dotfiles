@@ -10,6 +10,7 @@
 .config/waybar/scripts/mpris.awk
 .config/waybar/scripts/mpris.sh
 .config/waybar/style.css
+.config/wofi
 .local/bin/wPrntScrn
 .profile
 .shrc
