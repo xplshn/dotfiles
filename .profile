@@ -51,10 +51,12 @@ export WINEPREFIX="$HOME/.local/share/wine"
 
 # Runimage ALSA support
 #export RIM_BIND="/etc/asound.conf:/etc/asound.conf,/etc/alsa:/etc/alsa,/usr/share/alsa:/usr/share/alsa, /usr/share/alsa-card-profile:/usr/share/alsa-card-profile"
+export RIM_BIND="/usr/lib/go:/usr/lib/go,/usr/bin/go:/usr/bin/go,/usr/bin/gofmt:/usr/bin/gofmt"
+export RIM_HOST_XDG_OPEN=0
 export RIM_SHARE_FONTS=1
 
 # AppBundles & "uruntime"
-export DWARFS_CACHESIZE="256M"
+#export DWARFS_CACHESIZE="256M"
 
 # Graphical options:
 export XCURSOR_THEME=plan9cursors
