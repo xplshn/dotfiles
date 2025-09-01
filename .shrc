@@ -71,15 +71,18 @@ alias_loader() {
         alias rsl='pv -qL 100'
         alias '.,'='ls --color=auto -F'
         alias ',.'='ls --color=auto -FA'
-        #### Online:      #############
+        #### Online: ##################
         alias myip='curl -SsL https://ipinfo.io/ip && printf "\n"'
         alias glbl_status='curl -SsL https://status.plaintext.sh/t'
         alias fortune-online='curl -SsL https://icanhazdadjoke.com | cowsay'
-        #### Misc : ###################
+        #### Misc:  ###################
         alias steam='env -u LD_PRELOAD -u LD_LIBRARY_PATH dbus-run-session steam-cachyos.flatimage -no-cef-sandbox'
         alias devEnv='env -u ENV -u LD_PRELOAD -u LD_LIBRARY_PATH $HOME/Documents/TrulyMine/aShitTonOfAppBundles/Go_Fyne_C_devEnv-30_10_2024.AppDir/AppRun /bin/sh'
         boobs() { printf "\033]0;${*:-boobs}\007"; }
         tohex() { echo "$(printf "$*" | od -An -tx1 | awk '{printf "%s ", $0}')"; }
+        ###############################
+        #### Utils: ###################
+        alias 'r:'='bat -p --color=always --map-syntax '*.b*:c' --paging=never'
         ###############################
 }
 
