@@ -171,7 +171,7 @@ window#waybar, tooltip {
     color: #FCF520;
 }
 
-#clock, #clock-simpleclock {
+#clock, #clock-simpleclock, #custom-multiclock {
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.025));
     color: #F0F8FF;
     font-size: 12px;
