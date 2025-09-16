@@ -9,6 +9,8 @@
 .config/waybar/config.jsonc
 .config/waybar/scripts/mpris.awk
 .config/waybar/scripts/mpris.sh
+.config/waybar/scripts/multiclock.awk
+.config/waybar/scripts/multiclock.sh
 .config/waybar/style.css
 .config/wofi
 .local/bin/shmoji
