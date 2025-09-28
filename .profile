@@ -79,4 +79,4 @@ export SDL_AUDIODRIVER="pipewire"
 # # Always use intel iGPU
 # # export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/intel_icd.x86_64.json:usr/share/vulkan/icd.d/intel_icd.i686.json"
 # Always expose Nvidia GPU
-export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json:/usr/share/vulkan/icd.d/intel_icd.x86_64.json:usr/share/vulkan/icd.d/intel_icd.i686.json"
+#export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json:/usr/share/vulkan/icd.d/intel_icd.x86_64.json:usr/share/vulkan/icd.d/intel_icd.i686.json"

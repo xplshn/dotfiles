@@ -93,7 +93,7 @@
   },
   "wireplumber": {
     "format": "{icon} {volume}%",
-    "format-muted": "婢",
+    "format-muted": "󰅙 {volume}%",
     "scroll-step": 5,
     "format-icons": {
       "headphone": "",
