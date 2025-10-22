@@ -54,16 +54,8 @@
 
 ---
 
-Check out these commands in the terminal:  
 - `pa` — passwords manager  
 - `shmoji` — emoji menu  
-- `wPrntScrn` — screenshots program  
+- `wPrntScrn` — screenshots program
 - `~/.config/hypr/scripts/rofiWall.sh` — wallpaper selection menu  
 
-# TODOs
-1. Set up a userstylesheet for Discord, to make it Frutiger Aero, without violating their TOS
-2. Get rid of the XFCE desktop..? Once hyprland is fully to your liking :3
-   - Add a cheatsheet that explains every keybind when you press SUPER+O, SUPER+Shift+O should explain some basic terminal concepts
-4. Write your first shell script :3
-5. Automate something with a shell script :3
-6. Become super haxxor 😎
