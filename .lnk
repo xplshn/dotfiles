@@ -1,5 +1,6 @@
 .config/foot/foot.ini
 .config/hypr/hyprland.conf
+.config/hypr/scripts/rofi2fa.sh
 .config/hypr/scripts/rofiMako.sh
 .config/hypr/scripts/rofiPa.sh
 .config/hypr/scripts/rofiWall.sh
