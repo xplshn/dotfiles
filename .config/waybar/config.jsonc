@@ -124,7 +124,10 @@
       "critical": 15
     },
     "tooltip": true,
-    "interval": 5
+    "interval": 5,
+    "on-click": "brightnessctl s 100%",
+    "on-scroll-up": "brightnessctl s +5%",
+    "on-scroll-down": "brightnessctl s 5%-"
   },
   "custom/sep": {
     "format": "|",
