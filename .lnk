@@ -16,5 +16,6 @@
 .config/wofi
 .local/bin/shmoji
 .local/bin/wPrntScrn
+.local/share/icons/plan9cursors
 .profile
 .shrc
