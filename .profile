@@ -6,6 +6,8 @@ export POSIXLY_CORRECT=1
 export XDG_DATA_DIRS="$HOME/.local/share:/usr/local/share:/usr/share:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share"
 export XDG_CONFIG_DIRS="$HOME/.config"
 export PATH="$PATH:$HOME/.local/bin:$HOME/Applications:$HOME/.local/share/flatpak/exports/bin"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 # User prefferences:
 export MINPS1="1" # Whether to show your "$HOSTNAME" in your "$PS1", this var is used by .shrc
