@@ -69,6 +69,7 @@ export XCURSOR_PATH="${XCURSOR_PATH}:~/.local/share/icons"
 export QT_QPA_PLATFORM="wayland;xcb"
 export SDL_VIDEODRIVER="wayland"
 export SDL_AUDIODRIVER="alsa"
+#export SDL_AUDIODRIVER="pipewire"
 export FMOD_ALSA_DEVICE="pulse"
 export PROTON_ENABLE_WAYLAND=1
 
