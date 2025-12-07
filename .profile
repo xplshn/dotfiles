@@ -56,6 +56,8 @@ export WINEPREFIX="$HOME/.local/share/wine"
 export RIM_BIND="/usr/lib/go:/usr/lib/go,/usr/bin/go:/usr/bin/go,/usr/bin/gofmt:/usr/bin/gofmt"
 export RIM_HOST_XDG_OPEN=1
 export RIM_SHARE_FONTS=1
+export RIM_SHARE_ICONS=1
+export RIM_NO_NVIDIA_CHECK=1
 
 # AppBundles & "uruntime"
 #export DWARFS_CACHESIZE="256M"
@@ -66,8 +68,9 @@ export XCURSOR_SIZE=24
 export XCURSOR_PATH="${XCURSOR_PATH}:~/.local/share/icons"
 export QT_QPA_PLATFORM="wayland;xcb"
 export SDL_VIDEODRIVER="wayland"
+export SDL_AUDIODRIVER="alsa"
+export FMOD_ALSA_DEVICE="pulse"
 export PROTON_ENABLE_WAYLAND=1
-export SDL_AUDIODRIVER="pipewire"
 
 # ICDs:
 #

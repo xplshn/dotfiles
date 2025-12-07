@@ -106,7 +106,7 @@
   "wireplumber#source": {
     "node-type": "Audio/Source",
     "format": "󰍬 {volume}%",
-    "format-muted": "",
+    "format-muted": " {volume}%",
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
     "on-click-middle": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
     "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+",
