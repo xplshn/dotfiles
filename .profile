@@ -52,8 +52,8 @@ export NATURE_ROOT="/opt/toolchains/nature"
 export WINEPREFIX="$HOME/.local/share/wine"
 
 # Runimage ALSA support
-#export RIM_BIND="/etc/asound.conf:/etc/asound.conf,/etc/alsa:/etc/alsa,/usr/share/alsa:/usr/share/alsa, /usr/share/alsa-card-profile:/usr/share/alsa-card-profile"
-export RIM_BIND="/usr/lib/go:/usr/lib/go,/usr/bin/go:/usr/bin/go,/usr/bin/gofmt:/usr/bin/gofmt"
+#export RIM_BIND="/etc/asound.conf:/etc/asound.conf,/etc/alsa:/etc/alsa,/usr/share/alsa:/usr/share/alsa, /usr/share/alsa-card-profile:/usr/share/alsa-card-profile,/usr/share/ppd:/usr/share/ppd"
+export RIM_BIND="/usr/lib/go:/usr/lib/go,/usr/bin/go:/usr/bin/go,/usr/bin/gofmt:/usr/bin/gofmt,/usr/share/ppd:/usr/share/ppd"
 export RIM_HOST_XDG_OPEN=1
 export RIM_SHARE_FONTS=1
 export RIM_SHARE_ICONS=1
@@ -85,4 +85,4 @@ export PROTON_ENABLE_WAYLAND=1
 # # Always use intel iGPU
 # # export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/intel_icd.x86_64.json:usr/share/vulkan/icd.d/intel_icd.i686.json"
 # Always expose Nvidia GPU
-#export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json:/usr/share/vulkan/icd.d/intel_icd.x86_64.json:usr/share/vulkan/icd.d/intel_icd.i686.json"
+export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json:/usr/share/vulkan/icd.d/intel_icd.x86_64.json:usr/share/vulkan/icd.d/intel_icd.i686.json"
